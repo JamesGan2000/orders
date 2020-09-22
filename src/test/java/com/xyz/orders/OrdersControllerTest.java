@@ -11,8 +11,7 @@ public class OrdersControllerTest {
         controller.createOrder(1, "A");
         Order order = new Order(1, "A");
 
-        String expected = "Order Not Found:Order{id=2, name='B'}\n" +
-                "Remaining Orders:[Order{id=1, name='A'}]";
+        String expected = "Order Not Found:Order{id=2, name='B'}";
 
         Assert.assertEquals(expected, controller.updateOrder(2, "B"));
 
@@ -26,8 +25,7 @@ public class OrdersControllerTest {
 
         Assert.assertEquals("[" + order.toString() + "]", controller.listAllOrders());
 
-        String expected = "Order Not Found:Order{id=2, name='B'}\n" +
-                "Remaining Orders:[Order{id=1, name='A'}]";
+        String expected = "Order Not Found:Order{id=2, name='B'}";
 
         Assert.assertEquals(expected, controller.cancelOrder(2, "B"));
 
@@ -44,8 +42,7 @@ public class OrdersControllerTest {
 
         Assert.assertEquals("[" + order.toString() + "]", controller.listAllOrders());
 
-        String expected = "Order Cancelled:Order{id=1, name='A'}\n" +
-                "Remaining Orders:[]";
+        String expected = "Order Cancelled:Order{id=1, name='A'}";
 
         Assert.assertEquals(expected, controller.cancelOrder(1, "A"));
 

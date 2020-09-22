@@ -2,6 +2,7 @@ package com.xyz.orders;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -14,7 +15,7 @@ public class OrdersController {
 
     @GetMapping("/create-order")
     @ResponseBody
-    public Order createOrder(@RequestParam(name = "id", required = true) Integer id,
+    public Order createOrder(@RequestParam(name = "id") Integer id,
                           @RequestParam(name="name", required=false, defaultValue="Default-Name") String name) {
         return orderRepository.addItem(id, name);
     }
@@ -23,7 +24,7 @@ public class OrdersController {
     @ResponseBody
     public String updateOrder(@RequestParam(name = "id", required = false) Integer id,
                           @RequestParam(name="newName", required=false) String newName) {
-        boolean foundItem = orderRepository.foundItem(id, newName);
+        boolean foundItem = orderRepository.foundItem(id);
 
         if(foundItem){
             orderRepository.updateItem(id, newName);
@@ -32,8 +33,7 @@ public class OrdersController {
         String result = foundItem ? "Order Updated:" : "Order Not Found:";
 
         Order order = new Order(id, newName);
-        return result + order.toString() + "\n" +
-                "Remaining Orders:" + listAllOrders();
+        return result + order.toString();
     }
 
     @GetMapping("/cancel-order")
@@ -49,8 +49,20 @@ public class OrdersController {
         String result = foundItem ? "Order Cancelled:" : "Order Not Found:";
 
         Order order = new Order(id, name);
-        return result + order.toString() + "\n" +
-                "Remaining Orders:" + listAllOrders();
+        return result + order.toString();
+    }
+
+    @GetMapping("/list-by-name/{name}")
+    @ResponseBody
+    public String listByName(@PathVariable("name") String name) {
+        List<Order> orders = orderRepository.showAllItems();
+        List<String> info = new ArrayList<>();
+        for(Order order : orders){
+            if(order.getName().equals(name)){
+                info.add(order.toString());
+            }
+        }
+        return info.toString();
     }
 
     @GetMapping("/list-all-order")

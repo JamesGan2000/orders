@@ -13,6 +13,16 @@ public class OrderRepository {
         return order;
     }
 
+    public boolean foundItem(Integer id) {
+        for(Order order : allItems){
+            if(order.getId().equals(id)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public boolean foundItem(Integer id, String name) {
         return allItems.contains(new Order(id, name));
     }
@@ -26,11 +36,11 @@ public class OrderRepository {
             if(order.getId().equals(id)){
                 order.setName(newName);
             }
-        };
+        }
     }
 
     public List<Order> showAllItems(){
-        Collections.sort(allItems, new SortById());
+        allItems.sort(new SortById());
         return allItems;
     }
 }
