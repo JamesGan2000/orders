@@ -1,0 +1,67 @@
+This project, built using Spring-Boot and IntelliJ, simulates a smiple Order system.
+
+It has following endpoints:
+
+/create-order?id=1&name="A"
+/update-order
+/cancel-order
+/list-all-order
+/list-by-name/{name}
+
+An example usage of above [after starting/running the application in IntelliJ, for example] will dsiplay:
+
+1) localhost:8080/list-all-order
+
+ -- []
+ -- since there is no orders available
+
+2) localhost:8080/create-order?id=1&name=A
+
+ -- {"id":1,"name":"A"}
+
+3) localhost:8080/create-order?id=2&name=B
+
+ -- {"id":2,"name":"B"}
+
+4) localhost:8080/create-order?id=3&name=C
+
+ -- {"id":3,"name":"C"}
+
+5) localhost:8080/create-order?id=4&name=D
+
+ -- {"id":4,"name":"D"}
+
+6) localhost:8080/list-all-order
+
+ -- will display
+
+ [Order{id=1, name='A'}, Order{id=2, name='B'}, Order{id=3, name='C'}, Order{id=4, name='D'}]
+
+7) localhost:8080/cancel-order?id=1&name=A
+
+    Order Cancelled:Order{id=1, name='A'}
+
+8) localhost:8080/list-all-order
+
+ [Order{id=2, name='B'}, Order{id=3, name='C'}, Order{id=4, name='D'}]
+
+9) localhost:8080/cancel-order?id=1&name=A
+
+    Order Not Found:Order{id=1, name='A'}
+
+10) localhost:8080/update-order?id=3&newName=A
+
+    Order Updated:Order{id=3, name='A'}
+
+11) localhost:8080/update-order?id=1&name=A
+
+  Order Not Found:Order{id=1, name='null'}
+
+12) localhost:8080/update-order?id=4&newName=A
+
+    Order Updated:Order{id=4, name='A'}
+
+12) localhost:8080/list-by-name/A
+
+    [Order{id=3, name='A'}, Order{id=4, name='A'}]
+
