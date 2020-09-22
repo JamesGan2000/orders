@@ -16,23 +16,39 @@ public class OrdersController {
     @ResponseBody
     public Order createOrder(@RequestParam(name = "id", required = true) Integer id,
                           @RequestParam(name="name", required=false, defaultValue="Default-Name") String name) {
-        Order order = new Order(id, name);
-        orderRepository.addItem(order);
-        return order;
+        return orderRepository.addItem(id, name);
+    }
+
+    @GetMapping("/update-order")
+    @ResponseBody
+    public String updateOrder(@RequestParam(name = "id", required = false) Integer id,
+                          @RequestParam(name="newName", required=false) String newName) {
+        boolean foundItem = orderRepository.foundItem(id, newName);
+
+        if(foundItem){
+            orderRepository.updateItem(id, newName);
+        }
+
+        String result = foundItem ? "Order Updated:" : "Order Not Found:";
+
+        Order order = new Order(id, newName);
+        return result + order.toString() + "\n" +
+                "Remaining Orders:" + listAllOrders();
     }
 
     @GetMapping("/cancel-order")
     @ResponseBody
     public String cancelOrder(@RequestParam(name = "id", required = false) Integer id,
                           @RequestParam(name="name", required=false) String name) {
-        Order order = new Order(id, name);
         boolean foundItem = orderRepository.foundItem(id, name);
 
         if(foundItem){
-            orderRepository.deleteItem(order);
+            orderRepository.deleteItem(id, name);
         }
 
-        String result = foundItem ? "Cancel Order Success:" : "Order Not Found:";
+        String result = foundItem ? "Order Cancelled:" : "Order Not Found:";
+
+        Order order = new Order(id, name);
         return result + order.toString() + "\n" +
                 "Remaining Orders:" + listAllOrders();
     }

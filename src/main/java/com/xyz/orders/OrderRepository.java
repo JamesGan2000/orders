@@ -7,16 +7,26 @@ import java.util.List;
 public class OrderRepository {
     List<Order> allItems = new ArrayList<>();
 
-    public void addItem(Order order){
+    public Order addItem(Integer id, String name){
+        Order order = new Order(id, name);
         allItems.add(order);
+        return order;
     }
 
     public boolean foundItem(Integer id, String name) {
         return allItems.contains(new Order(id, name));
     }
 
-    public void deleteItem(Order order){
-        allItems.remove(order);
+    public void deleteItem(Integer id, String name){
+        allItems.remove(new Order(id, name));
+    }
+
+    public void updateItem(Integer id, String newName){
+        for(Order order : allItems){
+            if(order.getId().equals(id)){
+                order.setName(newName);
+            }
+        };
     }
 
     public List<Order> showAllItems(){

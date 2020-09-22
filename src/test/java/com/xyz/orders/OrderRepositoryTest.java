@@ -9,17 +9,13 @@ class OrderRepositoryTest {
 
     @Test
     void deleteItem_indeed_deleted(){
-        Order order1 = new Order(1, "A");
-        Order order2 = new Order(2, "B");
-        Order order3 = new Order(3, "C");
-
-        orderRepository.addItem(order1);
-        orderRepository.addItem(order2);
-        orderRepository.addItem(order3);
+        orderRepository.addItem(1, "A");
+        orderRepository.addItem(2, "B");
+        orderRepository.addItem(3, "C");
 
         Integer size1 = orderRepository.allItems.size();
 
-        orderRepository.deleteItem(order2);
+        orderRepository.deleteItem(2, "B");
 
         assert orderRepository.foundItem(1, "A");
         assert !orderRepository.foundItem(2, "B");
@@ -31,9 +27,21 @@ class OrderRepositoryTest {
     }
 
     @Test
+    void updateItem(){
+        orderRepository.addItem(1, "A");
+
+        assert !orderRepository.foundItem(1, "B");
+        assert !orderRepository.foundItem(2, "A");
+
+        orderRepository.updateItem(1, "B");
+
+        assert orderRepository.foundItem(1, "B");
+        assert !orderRepository.foundItem(1, "A");
+    }
+
+    @Test
     void foundItem_false(){
-        Order order = new Order(1, "A");
-        orderRepository.addItem(order);
+        orderRepository.addItem(1, "A");
 
         assert !orderRepository.foundItem(1, "B");
         assert !orderRepository.foundItem(2, "A");
@@ -44,8 +52,7 @@ class OrderRepositoryTest {
         // item not found [before being added]
         assert !orderRepository.foundItem(1, "A");
 
-        Order order = new Order(1, "A");
-        orderRepository.addItem(order);
+        orderRepository.addItem(1, "A");
 
         Integer size1 = orderRepository.allItems.size();
 
@@ -64,7 +71,7 @@ class OrderRepositoryTest {
         Integer size1 = orderRepository.allItems.size();
         assertFalse(orderRepository.allItems.contains(order));
 
-        orderRepository.addItem(order);
+        orderRepository.addItem(1, "A");
 
         Integer size2 = orderRepository.allItems.size();
         assertTrue(orderRepository.allItems.contains(order));
