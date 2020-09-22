@@ -1,4 +1,4 @@
-This project, built using Spring-Boot and IntelliJ, simulates a smiple Order system.
+This project, built using Spring-Boot and IntelliJ, simulates a simple Order system.
 
 It has following endpoints:
 
