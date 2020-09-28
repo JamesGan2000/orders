@@ -6,73 +6,56 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Controller
 public class OrdersController {
-    private OrderRepository orderRepository = new OrderRepository();
+    private OrderHandler orderHandler = new OrderHandler();
+    private OrdersUtil ordersUtil = new OrdersUtil();
+
+    // the controller class delegate service-layer class to do the work
+    // the controller class should not have very complicated coding logic/implementation
 
     @GetMapping("/create-order")
     @ResponseBody
     public Order createOrder(@RequestParam(name = "id") Integer id,
                           @RequestParam(name="name", required=false, defaultValue="Default-Name") String name) {
-        return orderRepository.addItem(id, name);
+        return orderHandler.addItem(id, name);
     }
 
     @GetMapping("/update-order")
     @ResponseBody
     public String updateOrder(@RequestParam(name = "id", required = false) Integer id,
                           @RequestParam(name="newName", required=false) String newName) {
-        boolean foundItem = orderRepository.foundItem(id);
+        boolean foundItem = orderHandler.foundItem(id);
 
         if(foundItem){
-            orderRepository.updateItem(id, newName);
+            orderHandler.updateItem(id, newName);
         }
 
-        String result = foundItem ? "Order Updated:" : "Order Not Found:";
-
-        Order order = new Order(id, newName);
-        return result + order.toString();
+        return ordersUtil.messageFor(foundItem, id, newName, "order Updated");
     }
 
     @GetMapping("/cancel-order")
     @ResponseBody
     public String cancelOrder(@RequestParam(name = "id", required = false) Integer id,
                           @RequestParam(name="name", required=false) String name) {
-        boolean foundItem = orderRepository.foundItem(id, name);
+        boolean foundItem = orderHandler.foundItem(id, name);
 
         if(foundItem){
-            orderRepository.deleteItem(id, name);
+            orderHandler.deleteItem(id, name);
         }
 
-        String result = foundItem ? "Order Cancelled:" : "Order Not Found:";
-
-        Order order = new Order(id, name);
-        return result + order.toString();
+        return ordersUtil.messageFor(foundItem, id, name, "order Cancelled");
     }
 
     @GetMapping("/list-by-name/{name}")
     @ResponseBody
     public String listByName(@PathVariable("name") String name) {
-        List<Order> orders = orderRepository.showAllItems();
-        List<String> info = new ArrayList<>();
-        for(Order order : orders){
-            if(order.getName().equals(name)){
-                info.add(order.toString());
-            }
-        }
-        return info.toString();
+        return ordersUtil.infoFor(orderHandler.showItemsFor(name));
     }
 
     @GetMapping("/list-all-order")
     @ResponseBody
     public String listAllOrders() {
-        List<Order> orders = orderRepository.showAllItems();
-        List<String> info = new ArrayList<>();
-        for(Order order : orders){
-            info.add(order.toString());
-        }
-        return info.toString();
+        return ordersUtil.infoFor(orderHandler.showAllItems());
     }
 }
